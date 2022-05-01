@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Database</title>
+    <link rel="stylesheet" href="commonStyles.css" />
+  </head>
+
+  <body>
+    
+    <div id="links">
+      <div><a href="index.html">Home</a></div>
+      <div><a href="applied.html">Applied Jobs</a></div>
+      <div><a href="bookmark.html">Bookmarks</a></div>
+    </div>
+   
+    <main>
+      <select name="" id="sortsname" onchange="change()">
+        <option value="sortname"> sort by Name</option>
+          <option value="increasing">increasing</option>
+          <option value="decreasing">decreasing</option>
+        
+      </select>
+      <select name="" id="salarysort" onchange="salarychange()">
+        <option value="sortsalry"> sort by Name</option>
+          <option value="high">increasing</option>
+          <option value="low">decreasing</option>
+        
+      </select>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Job applied</th>
+            <th>Salary expected</th>
+            <th>Add to bookmark</th>
+          </tr>
+        </thead>
+        <tbody id="body">
+          <!-- Append your output to tbody -->
+        </tbody>
+      </table>
+    </main>
+  </body>
+  <script>
+    //you need to code here
+    var jobarr=JSON.parse(localStorage.getItem("jobList"))
+    displaydata(jobarr)
+
+
+   function change(){
+    var selected =document.querySelector("#sortsname").value
+    console.log(selected)
+    if (selected=="increasing")
+    {
+      jobarr.sort(function(a,b){
+        var x=a.personname.toUpperCase();
+        var y=b.personname.toUpperCase();
+        if(x>y)
+        {
+          return 1
+        }
+        if(x<y)
+        return -1
+        else{
+          return 0
+        }
+       
+      })
+      displaydata(jobarr);
+    }
+    if(selected=="decreasing")
+    {
+      jobarr.sort(function(a,b){
+        var x=a.personname.toUpperCase();
+        var y=b.personname.toUpperCase();
+        if(x<y)
+        {
+          return 1
+        }
+        if(x>y)
+        return -1
+        else{
+          return 0
+        }
+       
+      })
+      displaydata(jobarr);
+    }
+   }
+   function salarychange(){
+    var selected =document.querySelector("#salarysort").value
+    console.log(selected)
+    if (selected=="high")
+    {
+      jobarr.sort(function(a,b){
+        return b.personsalary-a.personsalary;
+       
+      })
+      displaydata(jobarr);
+    }
+    if(selected=="low")
+    {
+      
+        jobarr.sort(function(a,b){
+        return a.personsalary-b.personsalary;
+       
+      })
+    
+      displaydata(jobarr);
+    }
+   }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    
+    var bookmarkarr=JSON.parse(localStorage.getItem("bookmarks"))||[];
+    
+    var sum=jobarr.reduce(function(acc,ele){
+       return acc+Number(ele.personsalary)
+    },0)
+    console.log(sum);
+    
+    function displaydata(data){
+      document.querySelector("tbody").innerHTML="";
+      data.forEach(function(element){
+        console.log(element)
+        var tr= document.createElement("tr");
+
+        var td1=document.createElement("td");
+        td1.innerText=element.personname
+        var td2=document.createElement("td");
+        td2.innerText=element.personmail
+        var td3=document.createElement("td");
+        td3.innerText=element.personrole
+        var td4=document.createElement("td");
+        td4.innerText=element.personsalary
+        var td5=document.createElement("td");
+        td5.innerText="Bookmark"
+        td5.style.color="Blue"
+        td5.style.cursor="pointer"
+        td5.addEventListener("click",function(){
+          bookmarkfunction(element)
+        })
+
+        tr.append(td1,td2,td3,td4,td5)
+        document.querySelector("tbody").append(tr)
+      });
+    }
+
+    function bookmarkfunction(element){
+      bookmarkarr.push(element)
+      localStorage.setItem("bookmarks",JSON.stringify(bookmarkarr))
+      
+    }
+  </script>
+</html>
